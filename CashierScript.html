@@ -1,0 +1,12 @@
+<script>
+  resetPage();
+
+  function resetPage() {
+    $("#inputDateTime").val(
+      new Date().toJSON().slice(0, 11) +
+        ("0" + new Date().getHours()).slice(-2) +
+        ":" +
+        ("0" + new Date().getMinutes()).slice(-2)
+    );
+  }
+</script>
