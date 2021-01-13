@@ -4,9 +4,98 @@
     <?!= include("Header"); ?>
   </head>
   <body>
-    asdwd
+    <div class="px-4 py-3">
+      <form>
+        <div class="form-row mb-3">
+          <div class="col">
+            <input
+              type="datetime-local"
+              class="form-control"
+              placeholder="Input datetime"
+            />
+          </div>
+          <div class="col pt-2">
+            <div class="row">
+              <div class="col">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="eat-in-out"
+                    id="inputDineIn"
+                    value="dine-in"
+                  />
+                  <label class="form-check-label" for="inputDineIn"
+                    >Dine-In</label
+                  >
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="eat-in-out"
+                    id="inputTakeAway"
+                    value="take-away"
+                  />
+                  <label class="form-check-label" for="inputTakeAway"
+                    >Take Away</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputFnB">Food & Beverages</label>
 
-    <?!= include("CashierScript"); ?>
+            <select
+              id="inputFnB"
+              class="form-control"
+              placeholder="Select Food or Beverages"
+            >
+              <option>Food 1</option>
+              <option>Drink 1</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="inputPrice">Price</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Rp</span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="inputPrice"
+                placeholder="Price"
+              />
+            </div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="inputQuantity">Quantity</label>
+            <input
+              type="number"
+              class="form-control"
+              id="inputQuantity"
+              placeholder="Quantity"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="inputNotes"
+            placeholder="Add extra notes here."
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Submit</button>
+      </form>
+    </div>
     <?!= include("Footer"); ?>
   </body>
 </html>

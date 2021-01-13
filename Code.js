@@ -14,7 +14,7 @@ function createMenu() {
 // Functions below display the pages
 function loadCashier() {
   const htmlServ = HtmlService.createTemplateFromFile("Cashier");
-  const html = htmlServ.evaluate().setWidth(1000).setHeight(550);
+  const html = htmlServ.evaluate().setWidth(1000).setHeight(325);
   const ui = SpreadsheetApp.getUi();
   ui.showModelessDialog(html, "Cashier");
 }
