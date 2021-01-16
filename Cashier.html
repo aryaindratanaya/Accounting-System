@@ -8,12 +8,17 @@
       <form>
         <div class="form-row mb-2">
           <div class="col">
-            <input
-              id="inputDateTime"
-              type="datetime-local"
-              class="form-control"
-              placeholder="Input datetime"
-            />
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Order ID</span>
+              </div>
+              <input
+                id="inputDateTime"
+                type="datetime-local"
+                class="form-control"
+                placeholder="Input Order iD"
+              />
+            </div>
           </div>
           <div class="col">
             <div class="form-row">
@@ -52,14 +57,18 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="inputFnB">Food & Beverages</label>
-
             <select
               id="inputFnB"
               class="form-control"
               placeholder="Select Food or Beverages"
             >
-              <option>Food 1</option>
-              <option>Drink 1</option>
+              <? drinks.forEach((item, i) =>
+              { ?>
+              <option>
+                <?= i ?>.
+                <?= item[0] ?>
+              </option>
+              <? }); ?>
             </select>
           </div>
           <div class="form-group col-md-3">
@@ -98,7 +107,28 @@
         <button type="submit" class="btn btn-success btn-block">Submit</button>
       </form>
     </div>
-    <?!= include("CashierScript"); ?>
+
+    <script>
+      resetPage();
+
+      function resetPage() {
+        $("#inputDateTime").val(
+          new Date().toJSON().slice(0, 11) +
+            ("0" + new Date().getHours()).slice(-2) +
+            ":" +
+            ("0" + new Date().getMinutes()).slice(-2)
+        );
+      }
+
+      $("#inputFnB").on("change", function () {
+        const selectedFnB = Number(this.value.split(".")[0]) || 0;
+        const drinksRaw = <?= drinks ?>;
+        const drinks = drinksRaw.split(",");
+        const selectedPrice = drinks[selectedFnB * 2 + 1];
+        $("#inputPrice").val(selectedPrice);
+      });
+    </script>
+
     <?!= include("Footer"); ?>
   </body>
 </html>

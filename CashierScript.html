@@ -9,4 +9,8 @@
         ("0" + new Date().getMinutes()).slice(-2)
     );
   }
+
+  $("#inputFnB").on("change", function () {
+    const selectedFnB = Number(this.value.split(".")[0]);
+  });
 </script>

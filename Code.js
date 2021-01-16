@@ -14,9 +14,19 @@ function createMenu() {
 // Functions below display the pages
 function loadCashier() {
   const htmlServ = HtmlService.createTemplateFromFile("Cashier");
+  htmlServ.drinks = getDrinks();
   const html = htmlServ.evaluate().setWidth(1000).setHeight(325);
   const ui = SpreadsheetApp.getUi();
   ui.showModelessDialog(html, "Cashier");
+}
+
+// Load entries from sheet
+function getDrinks() {
+  const ws = ss.getSheetByName("Menu");
+  const entries = ws
+    .getRange(4, 7, getLastRowColumn(ws.getRange("F:F").getValues()) - 3, 2)
+    .getValues();
+  return arrayValidator(entries);
 }
 
 // Repeated operations
