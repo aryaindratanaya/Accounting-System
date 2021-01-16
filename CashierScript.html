@@ -1,6 +1,10 @@
 <script>
-  resetPage();
+  // VARIABLES
+  let drinks = [];
+  let orders = {};
 
+  // PREPARATION
+  resetPage();
   function resetPage() {
     $("#inputDateTime").val(
       new Date().toJSON().slice(0, 11) +
@@ -8,9 +12,85 @@
         ":" +
         ("0" + new Date().getMinutes()).slice(-2)
     );
+
+    google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
   }
 
+  // ON-PROCESS
+  // Fill the inputPrice
   $("#inputFnB").on("change", function () {
-    const selectedFnB = Number(this.value.split(".")[0]);
+    const sltFnB = this.value;
+    drinks.forEach((item) => {
+      if (item[0] === sltFnB) {
+        $("#inputPrice").val(item[1]);
+      }
+    });
   });
+  // Add item(s) to orders
+  function addItem() {
+    const sltFnB = $("#inputFnB").val();
+    const sltPrice = Number($("#inputPrice").val());
+    const sltQuantity = Number($("#inputQuantity").val());
+    !([sltFnB] in orders)
+      ? (orders[[sltFnB]] = {
+          quantity: sltQuantity,
+          price: sltPrice,
+        })
+      : (orders[[sltFnB]] = {
+          quantity: orders[[sltFnB]].quantity + sltQuantity,
+          price: orders[[sltFnB]].price + sltPrice,
+        });
+    fillTable();
+  }
+  // Populate orders to order table
+  function fillTable() {
+    $("tbody").empty();
+    let orderEntries = [];
+
+    for (const [i, [order, value]] of Object.entries(Object.entries(orders))) {
+      const minusIcon =
+        '<button type="button" class="btn btn-warning" onClick="deleteItem(this)" id="mns-' +
+        i +
+        '">-</button>';
+      const plusIcon =
+        '<button type="button" class="btn btn-success" onClick="deleteItem(this)" id="pls-' +
+        i +
+        '">+</button>';
+      const trashIcon =
+        '<button type="button" class="btn btn-danger" onClick="deleteItem(this)" id="trs-' +
+        i +
+        '"><i class="fa fa-trash" aria-hidden="true"></i></button>';
+      const actions =
+        '<div class="btn-group" role="group">' +
+        minusIcon +
+        trashIcon +
+        plusIcon +
+        "</div>";
+
+      orderEntries.push(
+        "<tr><td>" +
+          (Number(i) + 1) +
+          "</td><th scope='row'>" +
+          order +
+          "</th><td>" +
+          value.quantity +
+          "</td><td>" +
+          value.price +
+          "</td><td style='width:  30px'>" +
+          actions +
+          "</td></tr>"
+      );
+    }
+    $("tbody").append(orderEntries.join(""));
+  }
+  // Delete an order from order table
+  function deleteItem(element) {
+    console.log(element.id.split("-")[1]);
+  }
+
+  // HANDLERS
+  function getDrinksHandler(params) {
+    drinks = params;
+    $("#inputPrice").val(drinks[0][1]);
+  }
 </script>

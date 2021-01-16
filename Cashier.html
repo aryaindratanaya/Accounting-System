@@ -65,7 +65,6 @@
               <? drinks.forEach((item, i) =>
               { ?>
               <option>
-                <?= i ?>.
                 <?= item[0] ?>
               </option>
               <? }); ?>
@@ -92,6 +91,8 @@
               class="form-control"
               id="inputQuantity"
               placeholder="Quantity"
+              min="1"
+              value="1"
             />
           </div>
         </div>
@@ -118,52 +119,16 @@
               <th scope="col">Item</th>
               <th scope="col">Quantity</th>
               <th scope="col">Price</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Long Black</td>
-              <td>2</td>
-              <td>20000</td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
         <button type="submit" class="btn btn-success btn-block">Submit</button>
       </form>
     </div>
 
-    <script>
-      resetPage();
-
-      function resetPage() {
-        $("#inputDateTime").val(
-          new Date().toJSON().slice(0, 11) +
-            ("0" + new Date().getHours()).slice(-2) +
-            ":" +
-            ("0" + new Date().getMinutes()).slice(-2)
-        );
-      }
-
-      // Fill the inputPrice
-      $("#inputFnB").on("change", function () {
-        const selectedFnB = Number(this.value.split(".")[0]) || 0;
-        const drinksRaw = <?= drinks ?>;
-        const drinks = drinksRaw.split(",");
-        const selectedPrice = drinks[selectedFnB * 2 + 1];
-        $("#inputPrice").val(selectedPrice);
-      });
-
-      function addItem() {
-        const selectedFnB = $("#inputFnB").val().split(". ")[1];
-        const selectedPrice = $("#inputPrice").val();
-        console.log(selectedFnB);
-        console.log(selectedPrice);
-        $("tbody").append(
-          "<tr><th scope='row'>2</th><td>" +  + "</td><td>2</td><td>20000</td></tr>"
-        );
-      }
-    </script>
+    <?!= include("CashierScript"); ?>
 
     <?!= include("Footer"); ?>
   </body>

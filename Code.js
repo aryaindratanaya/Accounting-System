@@ -15,7 +15,7 @@ function createMenu() {
 function loadCashier() {
   const htmlServ = HtmlService.createTemplateFromFile("Cashier");
   htmlServ.drinks = getDrinks();
-  const html = htmlServ.evaluate().setWidth(1000).setHeight(310);
+  const html = htmlServ.evaluate().setWidth(1000).setHeight(1000);
   const ui = SpreadsheetApp.getUi();
   ui.showModelessDialog(html, "Cashier");
 }
