@@ -104,6 +104,31 @@
             placeholder="Add extra notes here."
           ></textarea>
         </div>
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          onclick="addItem()"
+        >
+          Add
+        </button>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Item</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Long Black</td>
+              <td>2</td>
+              <td>20000</td>
+            </tr>
+          </tbody>
+        </table>
         <button type="submit" class="btn btn-success btn-block">Submit</button>
       </form>
     </div>
@@ -120,6 +145,7 @@
         );
       }
 
+      // Fill the inputPrice
       $("#inputFnB").on("change", function () {
         const selectedFnB = Number(this.value.split(".")[0]) || 0;
         const drinksRaw = <?= drinks ?>;
@@ -127,6 +153,16 @@
         const selectedPrice = drinks[selectedFnB * 2 + 1];
         $("#inputPrice").val(selectedPrice);
       });
+
+      function addItem() {
+        const selectedFnB = $("#inputFnB").val().split(". ")[1];
+        const selectedPrice = $("#inputPrice").val();
+        console.log(selectedFnB);
+        console.log(selectedPrice);
+        $("tbody").append(
+          "<tr><th scope='row'>2</th><td>" +  + "</td><td>2</td><td>20000</td></tr>"
+        );
+      }
     </script>
 
     <?!= include("Footer"); ?>
