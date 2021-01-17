@@ -2,7 +2,7 @@
   // VARIABLES
   let drinks = [];
   let orders = [];
-  const ordersKeys = [];
+  const orderKeys = [];
 
   // PREPARATION
   resetPage();
@@ -13,7 +13,6 @@
         ":" +
         ("0" + new Date().getMinutes()).slice(-2)
     );
-
     google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
   }
 
@@ -33,28 +32,21 @@
     const sltPrice = Number($("#inputPrice").val());
     const sltQuantity = Number($("#inputQuantity").val());
 
-    if (orders.length === 0) {
+    if (!orderKeys.includes(sltFnB)) {
       orders.push({
         [sltFnB]: { quantity: sltQuantity, price: sltQuantity * sltPrice },
       });
-      ordersKeys.push(Object.keys(orders[0])[0]);
+      orderKeys.push(sltFnB);
     } else {
-      if (!ordersKeys.includes(sltFnB)) {
-        orders.push({
-          [sltFnB]: { quantity: sltQuantity, price: sltQuantity * sltPrice },
-        });
-        ordersKeys.push(Object.keys(orders[orders.length - 1])[0]);
-      } else {
-        orders[ordersKeys.indexOf(sltFnB)] = {
-          [sltFnB]: {
-            quantity:
-              orders[ordersKeys.indexOf(sltFnB)][sltFnB].quantity + sltQuantity,
-            price:
-              orders[ordersKeys.indexOf(sltFnB)][sltFnB].price +
-              sltQuantity * sltPrice,
-          },
-        };
-      }
+      const orderIndex = orderKeys.indexOf(sltFnB);
+      const orderValue = orders[orderIndex][sltFnB];
+
+      orders[orderIndex] = {
+        [sltFnB]: {
+          quantity: orderValue.quantity + sltQuantity,
+          price: orderValue.price + sltQuantity * sltPrice,
+        },
+      };
     }
     fillTable();
   }
@@ -83,15 +75,17 @@
         plusIcon +
         "</div>";
 
+      const currentFnB = Object.keys(order)[0];
+
       orderEntries.push(
         "<tr><td>" +
           (Number(i) + 1) +
           "</td><th scope='row'>" +
-          Object.keys(order)[0] +
+          currentFnB +
           "</th><td>" +
-          order[Object.keys(order)[0]].quantity +
+          order[currentFnB].quantity +
           "</td><td>" +
-          order[Object.keys(order)[0]].price +
+          order[currentFnB].price +
           "</td><td style='width: 30px'>" +
           actions +
           "</td></tr>"
@@ -99,32 +93,34 @@
     });
 
     $("tbody").append(orderEntries.join(""));
+    console.log(orders);
+    console.log(orderKeys);
   }
   // Update an order from order table
   function updateOrder(element) {
     const action = element.id.split("-")[0];
     const i = element.id.split("-")[1];
-    const orderKey = ordersKeys[i];
-    const prevQuantity = orders[i][orderKey].quantity;
-    const prevPrice = orders[i][orderKey].price;
+    const trgFnB = orderKeys[i];
+    const prevQuantity = orders[i][trgFnB].quantity;
+    const prevPrice = orders[i][trgFnB].price;
 
     switch (action) {
       case "dlt":
         orders.splice(i, 1);
-        ordersKeys.splice(i, 1);
+        orderKeys.splice(i, 1);
         break;
       case "mns":
         if (!(prevQuantity === 1)) {
-          orders[i][orderKey].quantity = prevQuantity - 1;
-          orders[i][orderKey].price = prevPrice - prevPrice / prevQuantity;
+          orders[i][trgFnB].quantity = prevQuantity - 1;
+          orders[i][trgFnB].price = prevPrice - prevPrice / prevQuantity;
         } else {
           orders.splice(i, 1);
-          ordersKeys.splice(i, 1);
+          orderKeys.splice(i, 1);
         }
         break;
       case "pls":
-        orders[i][orderKey].quantity = prevQuantity + 1;
-        orders[i][orderKey].price = prevPrice + prevPrice / prevQuantity;
+        orders[i][trgFnB].quantity = prevQuantity + 1;
+        orders[i][trgFnB].price = prevPrice + prevPrice / prevQuantity;
         break;
     }
     fillTable();
