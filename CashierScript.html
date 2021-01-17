@@ -1,7 +1,8 @@
 <script>
   // VARIABLES
   let drinks = [];
-  let orders = {};
+  let orders = [];
+  const ordersKeys = [];
 
   // PREPARATION
   resetPage();
@@ -26,20 +27,35 @@
       }
     });
   });
-  // Add item(s) to orders
-  function addItem() {
+  // Add order(s) to orders
+  function addOrder() {
     const sltFnB = $("#inputFnB").val();
     const sltPrice = Number($("#inputPrice").val());
     const sltQuantity = Number($("#inputQuantity").val());
-    !([sltFnB] in orders)
-      ? (orders[[sltFnB]] = {
-          quantity: sltQuantity,
-          price: sltPrice,
-        })
-      : (orders[[sltFnB]] = {
-          quantity: orders[[sltFnB]].quantity + sltQuantity,
-          price: orders[[sltFnB]].price + sltPrice,
+
+    if (orders.length === 0) {
+      orders.push({
+        [sltFnB]: { quantity: sltQuantity, price: sltQuantity * sltPrice },
+      });
+      ordersKeys.push(Object.keys(orders[0])[0]);
+    } else {
+      if (!ordersKeys.includes(sltFnB)) {
+        orders.push({
+          [sltFnB]: { quantity: sltQuantity, price: sltQuantity * sltPrice },
         });
+        ordersKeys.push(Object.keys(orders[orders.length - 1])[0]);
+      } else {
+        orders[ordersKeys.indexOf(sltFnB)] = {
+          [sltFnB]: {
+            quantity:
+              orders[ordersKeys.indexOf(sltFnB)][sltFnB].quantity + sltQuantity,
+            price:
+              orders[ordersKeys.indexOf(sltFnB)][sltFnB].price +
+              sltQuantity * sltPrice,
+          },
+        };
+      }
+    }
     fillTable();
   }
   // Populate orders to order table
@@ -47,17 +63,17 @@
     $("tbody").empty();
     let orderEntries = [];
 
-    for (const [i, [order, value]] of Object.entries(Object.entries(orders))) {
+    orders.forEach((order, i) => {
       const minusIcon =
-        '<button type="button" class="btn btn-warning" onClick="deleteItem(this)" id="mns-' +
+        '<button type="button" class="btn btn-warning" onClick="updateOrder(this)" id="mns-' +
         i +
         '">-</button>';
       const plusIcon =
-        '<button type="button" class="btn btn-success" onClick="deleteItem(this)" id="pls-' +
+        '<button type="button" class="btn btn-success" onClick="updateOrder(this)" id="pls-' +
         i +
         '">+</button>';
       const trashIcon =
-        '<button type="button" class="btn btn-danger" onClick="deleteItem(this)" id="trs-' +
+        '<button type="button" class="btn btn-danger" onClick="updateOrder(this)" id="dlt-' +
         i +
         '"><i class="fa fa-trash" aria-hidden="true"></i></button>';
       const actions =
@@ -71,21 +87,47 @@
         "<tr><td>" +
           (Number(i) + 1) +
           "</td><th scope='row'>" +
-          order +
+          Object.keys(order)[0] +
           "</th><td>" +
-          value.quantity +
+          order[Object.keys(order)[0]].quantity +
           "</td><td>" +
-          value.price +
-          "</td><td style='width:  30px'>" +
+          order[Object.keys(order)[0]].price +
+          "</td><td style='width: 30px'>" +
           actions +
           "</td></tr>"
       );
-    }
+    });
+
     $("tbody").append(orderEntries.join(""));
   }
-  // Delete an order from order table
-  function deleteItem(element) {
-    console.log(element.id.split("-")[1]);
+  // Update an order from order table
+  function updateOrder(element) {
+    const action = element.id.split("-")[0];
+    const i = element.id.split("-")[1];
+    const orderKey = ordersKeys[i];
+    const prevQuantity = orders[i][orderKey].quantity;
+    const prevPrice = orders[i][orderKey].price;
+
+    switch (action) {
+      case "dlt":
+        orders.splice(i, 1);
+        ordersKeys.splice(i, 1);
+        break;
+      case "mns":
+        if (!(prevQuantity === 1)) {
+          orders[i][orderKey].quantity = prevQuantity - 1;
+          orders[i][orderKey].price = prevPrice - prevPrice / prevQuantity;
+        } else {
+          orders.splice(i, 1);
+          ordersKeys.splice(i, 1);
+        }
+        break;
+      case "pls":
+        orders[i][orderKey].quantity = prevQuantity + 1;
+        orders[i][orderKey].price = prevPrice + prevPrice / prevQuantity;
+        break;
+    }
+    fillTable();
   }
 
   // HANDLERS
