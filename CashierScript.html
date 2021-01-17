@@ -3,20 +3,33 @@
   let drinks = [];
   let orders = [];
   const orderKeys = [];
+  let sltEatOptions = "Dine-In";
 
   // PREPARATION
   resetPage();
   function resetPage() {
-    $("#inputDateTime").val(
-      new Date().toJSON().slice(0, 11) +
-        ("0" + new Date().getHours()).slice(-2) +
-        ":" +
-        ("0" + new Date().getMinutes()).slice(-2)
-    );
+    $("#inputOrderCount").val(1);
     google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
   }
 
   // ON-PROCESS
+  // Toggle the eat options
+  function toggleEatOptions(element) {
+    $(element).next().removeClass("btn-outline-primary");
+    $(element).next().addClass("btn-primary");
+    switch (element.id) {
+      case "inputTakeAway":
+        $("#inputDineIn").next().addClass("btn-outline-primary");
+        $("#inputDineIn").next().removeClass("btn-primary");
+        sltEatOptions = "Take Away";
+        break;
+      case "inputDineIn":
+        $("#inputTakeAway").next().addClass("btn-outline-primary");
+        $("#inputTakeAway").next().removeClass("btn-primary");
+        sltEatOptions = "Dine-in";
+        break;
+    }
+  }
   // Fill the inputPrice
   $("#inputFnB").on("change", function () {
     const sltFnB = this.value;
@@ -93,8 +106,6 @@
     });
 
     $("tbody").append(orderEntries.join(""));
-    console.log(orders);
-    console.log(orderKeys);
   }
   // Update an order from order table
   function updateOrder(element) {
@@ -124,6 +135,12 @@
         break;
     }
     fillTable();
+  }
+
+  function submitOrder() {
+    const id = $("#inputDateTime").val();
+    const notes = $("#inputNotes").val();
+    google.script.run.addSales(id, sltEatOptions, orders, notes);
   }
 
   // HANDLERS

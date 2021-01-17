@@ -10,13 +10,14 @@
           <div class="col">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">Order ID</span>
+                <span class="input-group-text">Order</span>
               </div>
               <input
-                id="inputDateTime"
-                type="datetime-local"
+                id="inputOrderCount"
+                type="number"
                 class="form-control"
-                placeholder="Input Order iD"
+                placeholder="Input order count"
+                style="text-align: right"
               />
             </div>
           </div>
@@ -31,6 +32,7 @@
                   autocomplete="off"
                   checked
                   style="display: none"
+                  onclick="toggleEatOptions(this)"
                 />
                 <label class="btn btn-primary btn-block" for="inputDineIn"
                   >Dine-In</label
@@ -44,6 +46,7 @@
                   id="inputTakeAway"
                   autocomplete="off"
                   style="display: none"
+                  onclick="toggleEatOptions(this)"
                 />
                 <label
                   class="btn btn-outline-primary btn-block"
@@ -124,7 +127,13 @@
           </thead>
           <tbody></tbody>
         </table>
-        <button type="submit" class="btn btn-success btn-block">Submit</button>
+        <button
+          type="button"
+          class="btn btn-success btn-block"
+          onclick="submitOrder()"
+        >
+          Submit
+        </button>
       </form>
     </div>
 

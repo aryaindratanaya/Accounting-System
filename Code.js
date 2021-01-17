@@ -29,6 +29,30 @@ function getDrinks() {
   return arrayValidator(entries);
 }
 
+// Add entries to sheet
+function addSales(id, sltEatOptions, orders, notes) {
+  let salesEntry = [];
+
+  orders.forEach((order, i) => {
+    const currentFnB = Object.keys(order)[0];
+    salesEntry.push([
+      currentFnB,
+      orders[i][currentFnB].quantity,
+      orders[i][currentFnB].price,
+      sltEatOptions,
+      notes,
+    ]);
+  });
+
+  const ws = ss.getSheetByName("Sales");
+  ws.getRange(
+    getLastRowColumn(ws.getRange("B:B").getValues()) + 1,
+    2,
+    1,
+    4
+  ).setValues([[1, id, sltEatOptions, notes]]);
+}
+
 // Repeated operations
 function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
