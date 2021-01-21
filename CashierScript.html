@@ -8,8 +8,16 @@
   // PREPARATION
   resetPage();
   function resetPage() {
-    $("#inputOrderCount").val(1);
+    // set Order ID to current datetie
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    $("#inputOrderId").val(now.toISOString().slice(0, 16));
+    // getting the drinks menu
     google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
+  }
+
+  function showDateTime(element) {
+    console.log(element.value);
   }
 
   // ON-PROCESS
@@ -137,9 +145,12 @@
     fillTable();
   }
 
+  // SUBMISSION
   function submitOrder() {
-    const id = $("#inputDateTime").val();
+    const id = $("#inputOrderId").val();
     const notes = $("#inputNotes").val();
+    const date = new Date().getDate();
+    console.log(date);
     google.script.run.addSales(id, sltEatOptions, orders, notes);
   }
 

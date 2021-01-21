@@ -36,6 +36,7 @@ function addSales(id, sltEatOptions, orders, notes) {
   orders.forEach((order, i) => {
     const currentFnB = Object.keys(order)[0];
     salesEntry.push([
+      id,
       currentFnB,
       orders[i][currentFnB].quantity,
       orders[i][currentFnB].price,
@@ -47,10 +48,10 @@ function addSales(id, sltEatOptions, orders, notes) {
   const ws = ss.getSheetByName("Sales");
   ws.getRange(
     getLastRowColumn(ws.getRange("B:B").getValues()) + 1,
-    2,
-    1,
-    4
-  ).setValues([[1, id, sltEatOptions, notes]]);
+    3,
+    salesEntry.length,
+    6
+  ).setValues([...salesEntry]);
 }
 
 // Repeated operations
