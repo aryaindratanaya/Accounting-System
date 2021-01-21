@@ -30,7 +30,8 @@ function getDrinks() {
 }
 
 // Add entries to sheet
-function addSales(id, sltEatOptions, orders, notes) {
+function addSales(id, sltEatOptions, orders) {
+  const now = new Date();
   let salesEntry = [];
 
   orders.forEach((order, i) => {
@@ -41,16 +42,18 @@ function addSales(id, sltEatOptions, orders, notes) {
       orders[i][currentFnB].quantity,
       orders[i][currentFnB].price,
       sltEatOptions,
-      notes,
+      orders[i][currentFnB].notes,
+      now.getDate() + "-" + now.getMonth() + "-" + now.getFullYear(),
+      now.getTime(),
     ]);
   });
 
   const ws = ss.getSheetByName("Sales");
   ws.getRange(
-    getLastRowColumn(ws.getRange("B:B").getValues()) + 1,
+    getLastRowColumn(ws.getRange("C:C").getValues()) + 1,
     3,
     salesEntry.length,
-    6
+    8
   ).setValues([...salesEntry]);
 }
 

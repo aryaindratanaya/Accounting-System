@@ -16,10 +16,6 @@
     google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
   }
 
-  function showDateTime(element) {
-    console.log(element.value);
-  }
-
   // ON-PROCESS
   // Toggle the eat options
   function toggleEatOptions(element) {
@@ -52,10 +48,15 @@
     const sltFnB = $("#inputFnB").val();
     const sltPrice = Number($("#inputPrice").val());
     const sltQuantity = Number($("#inputQuantity").val());
+    const sltNotes = $("#inputNotes").val();
 
     if (!orderKeys.includes(sltFnB)) {
       orders.push({
-        [sltFnB]: { quantity: sltQuantity, price: sltQuantity * sltPrice },
+        [sltFnB]: {
+          quantity: sltQuantity,
+          price: sltQuantity * sltPrice,
+          notes: sltNotes,
+        },
       });
       orderKeys.push(sltFnB);
     } else {
@@ -66,6 +67,7 @@
         [sltFnB]: {
           quantity: orderValue.quantity + sltQuantity,
           price: orderValue.price + sltQuantity * sltPrice,
+          notes: sltNotes,
         },
       };
     }
@@ -107,7 +109,9 @@
           order[currentFnB].quantity +
           "</td><td class='pt-3'>" +
           order[currentFnB].price +
-          "</td><td style='width: 30px'>" +
+          "</td><td class='pt-3' style='width: 40px'><textarea rows=1>" +
+          order[currentFnB].notes +
+          "</textarea></td><td style='width: 30px'>" +
           actions +
           "</td></tr>"
       );
@@ -148,10 +152,8 @@
   // SUBMISSION
   function submitOrder() {
     const id = $("#inputOrderId").val();
-    const notes = $("#inputNotes").val();
     const date = new Date().getDate();
-    console.log(date);
-    google.script.run.addSales(id, sltEatOptions, orders, notes);
+    google.script.run.addSales(id, sltEatOptions, orders);
   }
 
   // HANDLERS
