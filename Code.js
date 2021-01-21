@@ -44,7 +44,7 @@ function addSales(id, sltEatOptions, orders) {
       sltEatOptions,
       orders[i][currentFnB].notes,
       now.getDate() + "-" + now.getMonth() + "-" + now.getFullYear(),
-      ,
+      now.getTime(),
     ]);
   });
 
