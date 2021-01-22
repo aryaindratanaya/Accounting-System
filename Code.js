@@ -47,7 +47,7 @@ function getDrinks() {
 }
 
 // Add entries to sheet
-function addSales(orders, sltEatOptions, date, time, table, name) {
+function addSales(orders, sltEatOptions, date, time, table, name, total) {
   let salesEntry = [];
   const curOrderCount = isNaN(getOrderId()[0][0]) ? 1 : getOrderId()[0][0] + 1;
   const curOrderId = isNaN(getOrderId()[0][1]) ? 1 : getOrderId()[0][1] + 1;
@@ -66,6 +66,7 @@ function addSales(orders, sltEatOptions, date, time, table, name) {
       time,
       table,
       name,
+      total,
     ]);
   });
 
@@ -74,12 +75,12 @@ function addSales(orders, sltEatOptions, date, time, table, name) {
     getLastRowColumn(ws.getRange("C:C").getValues()) + 1,
     2,
     salesEntry.length,
-    11
+    12
   ).setValues([...salesEntry]);
 
   ws.getRange(
-    getLastRowColumn(ws.getRange("M:M").getValues()) + 1,
-    13,
+    getLastRowColumn(ws.getRange("N:N").getValues()) + 1,
+    14,
     salesEntry.length,
     1
   ).insertCheckboxes();
@@ -90,7 +91,7 @@ function addSales(orders, sltEatOptions, date, time, table, name) {
       getLastRowColumn(ws.getRange("C:C").getValues()) + 1 - salesEntry.length,
       2,
       salesEntry.length,
-      12
+      13
     );
 }
 

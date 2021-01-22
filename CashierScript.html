@@ -157,13 +157,15 @@
 
     const name = $("#inputName").val();
     const table = $("#inputTable").val();
+    const total = 50000;
     google.script.run.addSales(
       orders,
       sltEatOptions,
       curDate,
       curTime,
       table,
-      name
+      name,
+      total
     );
   }
 
