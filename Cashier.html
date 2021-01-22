@@ -7,55 +7,62 @@
     <div class="px-4 py-3">
       <form>
         <div class="form-row gx-5">
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">Order ID</span>
               </div>
               <input
                 id="inputOrderId"
-                type="datetime-local"
+                type="number"
                 class="form-control"
                 placeholder="Input order ID"
                 style="text-align: center"
-                onchange="showDateTime(this)"
               />
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="form-row">
-              <div class="col">
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="options-eat"
-                  id="inputDineIn"
-                  autocomplete="off"
-                  checked
-                  style="display: none"
-                  onclick="toggleEatOptions(this)"
-                />
-                <label class="btn btn-primary btn-block" for="inputDineIn"
-                  >Dine-In</label
-                >
+          <div class="col-md-3">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Table</span>
               </div>
-              <div class="col">
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="options-eat"
-                  id="inputTakeAway"
-                  autocomplete="off"
-                  style="display: none"
-                  onclick="toggleEatOptions(this)"
-                />
-                <label
-                  class="btn btn-outline-primary btn-block"
-                  for="inputTakeAway"
-                  >Take Away</label
-                >
-              </div>
+              <input
+                id="inputTable"
+                type="number"
+                class="form-control"
+                placeholder="Input table"
+                style="text-align: center"
+              />
             </div>
+          </div>
+          <div class="col-md-3">
+            <input
+              type="radio"
+              class="btn-check"
+              name="options-eat"
+              id="inputDineIn"
+              autocomplete="off"
+              checked
+              style="display: none"
+              onclick="toggleEatOptions(this)"
+            />
+            <label class="btn btn-primary btn-block" for="inputDineIn"
+              >Dine-In</label
+            >
+          </div>
+          <div class="col-md-3">
+            <input
+              type="radio"
+              class="btn-check"
+              name="options-eat"
+              id="inputTakeAway"
+              autocomplete="off"
+              style="display: none"
+              onclick="toggleEatOptions(this)"
+            />
+            <label class="btn btn-outline-primary btn-block" for="inputTakeAway"
+              >Take Away</label
+            >
           </div>
         </div>
         <div class="form-row">
@@ -66,6 +73,12 @@
               class="form-control"
               placeholder="Select Food or Beverages"
             >
+              <? foods.forEach((item, i) =>
+              { ?>
+              <option>
+                <?= item[0] ?>
+              </option>
+              <? }); ?>
               <? drinks.forEach((item, i) =>
               { ?>
               <option>

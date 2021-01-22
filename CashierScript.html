@@ -1,6 +1,6 @@
 <script>
   // VARIABLES
-  let drinks = [];
+  let menus = [];
   let orders = [];
   const orderKeys = [];
   let sltEatOptions = "Dine-In";
@@ -8,10 +8,10 @@
   // PREPARATION
   resetPage();
   function resetPage() {
-    // set Order ID to current datetie
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    $("#inputOrderId").val(now.toISOString().slice(0, 16));
+    // get the last sales id
+    google.script.run.withSuccessHandler(getOrderIdHandler).getOrderId();
+    // getting the foods menu
+    google.script.run.withSuccessHandler(getFoodsHandler).getFoods();
     // getting the drinks menu
     google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
   }
@@ -37,7 +37,7 @@
   // Fill the inputPrice
   $("#inputFnB").on("change", function () {
     const sltFnB = this.value;
-    drinks.forEach((item) => {
+    menus.forEach((item) => {
       if (item[0] === sltFnB) {
         $("#inputPrice").val(item[1]);
       }
@@ -98,19 +98,19 @@
         plusIcon +
         "</div>";
 
-      const currentFnB = Object.keys(order)[0];
+      const curFnB = Object.keys(order)[0];
 
       orderEntries.push(
         "<tr><td class='pt-3'>" +
           (Number(i) + 1) +
           "</td><th scope='row' class='pt-3'>" +
-          currentFnB +
+          curFnB +
           "</th><td class='pt-3'>" +
-          order[currentFnB].quantity +
+          order[curFnB].quantity +
           "</td><td class='pt-3'>" +
-          order[currentFnB].price +
+          order[curFnB].price +
           "</td><td class='pt-3' style='width: 40px'><textarea rows=1>" +
-          order[currentFnB].notes +
+          order[curFnB].notes +
           "</textarea></td><td style='width: 30px'>" +
           actions +
           "</td></tr>"
@@ -151,14 +151,31 @@
 
   // SUBMISSION
   function submitOrder() {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    const curDate = now.toISOString().slice(0, 10);
+    const curTime = now.toISOString().slice(11, 19);
+
     const id = $("#inputOrderId").val();
-    const date = new Date().getDate();
-    google.script.run.addSales(id, sltEatOptions, orders);
+    const table = $("#inputTable").val();
+    google.script.run.addSales(id, sltEatOptions, orders, curDate, curTime);
   }
 
   // HANDLERS
+  function getOrderIdHandler(params) {
+    const curSalesId = Number(params[0][1]) + 1;
+    isNaN(curSalesId)
+      ? $("#inputOrderId").val(1)
+      : $("#inputOrderId").val(curSalesId);
+  }
+
+  function getFoodsHandler(params) {
+    menus = [...menus, ...params];
+    $("#inputPrice").val(params[0][1]);
+  }
+
   function getDrinksHandler(params) {
-    drinks = params;
-    $("#inputPrice").val(drinks[0][1]);
+    menus = [...menus, ...params];
   }
 </script>
