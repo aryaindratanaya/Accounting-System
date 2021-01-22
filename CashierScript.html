@@ -8,8 +8,6 @@
   // PREPARATION
   resetPage();
   function resetPage() {
-    // get the last sales id
-    google.script.run.withSuccessHandler(getOrderIdHandler).getOrderId();
     // getting the foods menu
     google.script.run.withSuccessHandler(getFoodsHandler).getFoods();
     // getting the drinks menu
@@ -157,19 +155,12 @@
     const curDate = now.toISOString().slice(0, 10);
     const curTime = now.toISOString().slice(11, 19);
 
-    const id = $("#inputOrderId").val();
+    const name = $("#inputName").val();
     const table = $("#inputTable").val();
-    google.script.run.addSales(id, sltEatOptions, orders, curDate, curTime);
+    google.script.run.addSales(name, sltEatOptions, orders, curDate, curTime);
   }
 
   // HANDLERS
-  function getOrderIdHandler(params) {
-    const curSalesId = Number(params[0][1]) + 1;
-    isNaN(curSalesId)
-      ? $("#inputOrderId").val(1)
-      : $("#inputOrderId").val(curSalesId);
-  }
-
   function getFoodsHandler(params) {
     menus = [...menus, ...params];
     $("#inputPrice").val(params[0][1]);

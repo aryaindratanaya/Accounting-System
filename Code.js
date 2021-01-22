@@ -47,15 +47,16 @@ function getDrinks() {
 }
 
 // Add entries to sheet
-function addSales(id, sltEatOptions, orders, date, time) {
+function addSales(name, sltEatOptions, orders, date, time) {
   let salesEntry = [];
-  const curOrderId = isNaN(getOrderId()[0][0]) ? 1 : getOrderId()[0][0] + 1;
+  const curOrderCount = isNaN(getOrderId()[0][0]) ? 1 : getOrderId()[0][0] + 1;
+  const curOrderId = isNaN(getOrderId()[0][1]) ? 1 : getOrderId()[0][1] + 1;
 
   orders.forEach((order, i) => {
     const curFnB = Object.keys(order)[0];
     salesEntry.push([
-      curOrderId + i,
-      id,
+      curOrderCount + i,
+      curOrderId,
       curFnB,
       orders[i][curFnB].quantity,
       orders[i][curFnB].price,
@@ -63,6 +64,7 @@ function addSales(id, sltEatOptions, orders, date, time) {
       orders[i][curFnB].notes,
       date,
       time,
+      name,
     ]);
   });
 
@@ -71,23 +73,23 @@ function addSales(id, sltEatOptions, orders, date, time) {
     getLastRowColumn(ws.getRange("C:C").getValues()) + 1,
     2,
     salesEntry.length,
-    9
+    10
   ).setValues([...salesEntry]);
 
   ws.getRange(
-    getLastRowColumn(ws.getRange("K:K").getValues()) + 1,
-    11,
+    getLastRowColumn(ws.getRange("L:L").getValues()) + 1,
+    12,
     salesEntry.length,
     1
   ).insertCheckboxes();
 
-  id % 2 === 0 &&
+  curOrderId % 2 === 0 &&
     setBackgroundColor(
       "Sales",
       getLastRowColumn(ws.getRange("C:C").getValues()) + 1 - salesEntry.length,
       2,
       salesEntry.length,
-      10
+      11
     );
 }
 
