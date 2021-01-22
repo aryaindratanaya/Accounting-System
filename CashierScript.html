@@ -157,7 +157,14 @@
 
     const name = $("#inputName").val();
     const table = $("#inputTable").val();
-    google.script.run.addSales(name, sltEatOptions, orders, curDate, curTime);
+    google.script.run.addSales(
+      orders,
+      sltEatOptions,
+      curDate,
+      curTime,
+      table,
+      name
+    );
   }
 
   // HANDLERS
