@@ -50,7 +50,6 @@ function getDrinks() {
 function addSales(id, sltEatOptions, orders, date, time) {
   let salesEntry = [];
   const curOrderId = isNaN(getOrderId()[0][0]) ? 1 : getOrderId()[0][0] + 1;
-  // const curRow = getLastRowColumn(ws.getRange("B:B").getValues()) + 1;
 
   orders.forEach((order, i) => {
     const curFnB = Object.keys(order)[0];
@@ -74,7 +73,15 @@ function addSales(id, sltEatOptions, orders, date, time) {
     salesEntry.length,
     9
   ).setValues([...salesEntry]);
-  // setBackgroundColor("Sales", curRow, 2, salesEntry.length, 9);
+
+  id % 2 === 0 &&
+    setBackgroundColor(
+      "Sales",
+      getLastRowColumn(ws.getRange("C:C").getValues()) + 1 - salesEntry.length,
+      2,
+      salesEntry.length,
+      9
+    );
 }
 
 // Repeated operations
@@ -103,5 +110,5 @@ function getLastRowColumn(range) {
 
 function setBackgroundColor(sheet, row1, col1, row2, col2) {
   const range = ss.getSheetByName(sheet).getRange(row1, col1, row2, col2);
-  range.setBackgroundColor("grey");
+  range.setBackgroundColor("#d9d9d9");
 }
