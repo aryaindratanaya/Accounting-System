@@ -74,13 +74,20 @@ function addSales(id, sltEatOptions, orders, date, time) {
     9
   ).setValues([...salesEntry]);
 
+  ws.getRange(
+    getLastRowColumn(ws.getRange("K:K").getValues()) + 1,
+    11,
+    salesEntry.length,
+    1
+  ).insertCheckboxes();
+
   id % 2 === 0 &&
     setBackgroundColor(
       "Sales",
       getLastRowColumn(ws.getRange("C:C").getValues()) + 1 - salesEntry.length,
       2,
       salesEntry.length,
-      9
+      10
     );
 }
 
