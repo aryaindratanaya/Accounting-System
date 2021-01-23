@@ -1,1 +1,0 @@
-Count total correctly in Cashier Script in SUBMISSION

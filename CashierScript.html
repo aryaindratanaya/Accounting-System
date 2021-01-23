@@ -157,7 +157,12 @@
 
     const name = $("#inputName").val();
     const table = $("#inputTable").val();
-    const total = 50000;
+    let total = 0;
+    for (let i = 0; i < orders.length; i++) {
+      const curOrder = Object.keys(orders[i])[0];
+      const curPrice = orders[i][curOrder].price;
+      total = total + curPrice;
+    }
     google.script.run.addSales(
       orders,
       sltEatOptions,
