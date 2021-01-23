@@ -43,7 +43,7 @@
               autocomplete="off"
               checked
               style="display: none"
-              onclick="toggleEatOptions(this)"
+              onclick="toggleEatOptions(this.id)"
             />
             <label class="btn btn-primary btn-block" for="inputDineIn"
               >Dine-In</label
@@ -57,7 +57,7 @@
               id="inputTakeAway"
               autocomplete="off"
               style="display: none"
-              onclick="toggleEatOptions(this)"
+              onclick="toggleEatOptions(this.id)"
             />
             <label class="btn btn-outline-primary btn-block" for="inputTakeAway"
               >Take Away</label
@@ -145,9 +145,10 @@
           <tbody></tbody>
         </table>
         <button
+          id="btnSubmit"
           type="button"
           class="btn btn-success btn-block"
-          onclick="submitOrder()"
+          onclick="submitOrder(this.id)"
           disabled
         >
           Submit

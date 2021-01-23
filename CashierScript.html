@@ -4,22 +4,35 @@
   let orders = [];
   const orderKeys = [];
   let sltEatOptions = "Dine-In";
+  let isDataLoaded = 0; // The complete value is 2
 
   // PREPARATION
-  resetPage();
-  function resetPage() {
+  resetPageHard();
+  function resetPageHard() {
     // getting the foods menu
     google.script.run.withSuccessHandler(getFoodsHandler).getFoods();
     // getting the drinks menu
     google.script.run.withSuccessHandler(getDrinksHandler).getDrinks();
   }
+  function resetPageSoft(isSubmitted = false) {
+    if (isSubmitted) {
+      $("#inputName").val("");
+      $("#inputTable").val("");
+      toggleEatOptions("inputDineIn");
+    }
+    $("#inputFnB").val(menus[0][0]);
+    $("#inputPrice").val(menus[0][1]);
+    $("#inputQuantity").val(1);
+    $("#inputNotes").val("");
+  }
 
   // ON-PROCESS
   // Toggle the eat options
-  function toggleEatOptions(element) {
+  function toggleEatOptions(elementId) {
+    const element = "#" + elementId;
     $(element).next().removeClass("btn-outline-primary");
     $(element).next().addClass("btn-primary");
-    switch (element.id) {
+    switch (elementId) {
       case "inputTakeAway":
         $("#inputDineIn").next().addClass("btn-outline-primary");
         $("#inputDineIn").next().removeClass("btn-primary");
@@ -70,6 +83,7 @@
       };
     }
     fillTable();
+    resetPageSoft();
   }
   // Populate orders to order table
   function fillTable() {
@@ -148,7 +162,8 @@
   }
 
   // SUBMISSION
-  function submitOrder() {
+  function submitOrder(elementId) {
+    setLoading(elementId);
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 
@@ -163,25 +178,42 @@
       const curPrice = orders[i][curOrder].price;
       total = total + curPrice;
     }
-    google.script.run.addSales(
-      orders,
-      sltEatOptions,
-      curDate,
-      curTime,
-      table,
-      name,
-      total
-    );
+
+    google.script.run
+      .withSuccessHandler(addSalesHandler)
+      .addSales(orders, sltEatOptions, curDate, curTime, table, name, total);
+    resetPageSoft(true);
   }
 
   // HANDLERS
   function getFoodsHandler(params) {
-    menus = [...menus, ...params];
-    $("#inputPrice").val(params[0][1]);
+    menus = [...params, ...menus];
+    getFoodDrinkHandler();
   }
-
   function getDrinksHandler(params) {
     menus = [...menus, ...params];
-    $("button").removeAttr("disabled");
+    getFoodDrinkHandler();
+  }
+  function getFoodDrinkHandler() {
+    isDataLoaded = isDataLoaded + 1;
+    if (isDataLoaded === 2) {
+      $("button").removeAttr("disabled");
+      $("#inputPrice").val(menus[0][1]);
+    }
+  }
+  function addSalesHandler() {
+    unsetLoading("btnSubmit", "Submit");
+  }
+
+  // REPEATED OPERATIONS
+  function setLoading(elementId) {
+    const element = $("#" + elementId);
+    $(element).prop("disabled", true);
+    $(element).html("Loading...");
+  }
+  function unsetLoading(elementId, content) {
+    const element = $("#" + elementId);
+    $(element).prop("disabled", false);
+    $(element).html(content);
   }
 </script>
