@@ -2,7 +2,7 @@
   // VARIABLES
   let menus = [];
   let orders = [];
-  const orderKeys = [];
+  let orderKeys = [];
   let sltEatOptions = "Dine-In";
   let isDataLoaded = 0; // The complete value is 2
 
@@ -19,6 +19,9 @@
       $("#inputName").val("");
       $("#inputTable").val("");
       toggleEatOptions("inputDineIn");
+      orders = [];
+      orderKeys = [];
+      fillTable();
     }
     $("#inputFnB").val(menus[0][0]);
     $("#inputPrice").val(menus[0][1]);
@@ -121,7 +124,7 @@
           order[curFnB].quantity +
           "</td><td class='pt-3'>" +
           order[curFnB].price +
-          "</td><td class='pt-3' style='width: 40px'><textarea rows=1>" +
+          "</td><td class='pt-3' style='width: 40px'><textarea rows=1 readonly>" +
           order[curFnB].notes +
           "</textarea></td><td style='width: 30px'>" +
           actions +
